@@ -4,4 +4,3 @@ asyncio
 python-socketio
 aiohttp
 numpy
-socketio
