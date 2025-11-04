@@ -1,6 +1,6 @@
 import asyncio
 import time
-import socketio
+import socketio # type: ignore
 from aiohttp import web
 from typing import Any, Dict
 
@@ -16,13 +16,13 @@ sio.attach(app)
 
 
 # TODO: Create a SocketIO server instance with CORS settings to allow connections from frontend
-# Example: sio = socketio.AsyncServer(cors_allowed_origins="*")
+sio = socketio.AsyncServer(cors_allowed_origins="*")
 
 # TODO: Create a web application instance
-# Example: app = web.Application()
+app = web.Application()
 
 # TODO: Attach the socketio server to the web app
-# Example: sio.attach(app)
+sio.attach(app)
 
 
 # Basic health check endpoint - keep this for server monitoring
