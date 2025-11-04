@@ -334,12 +334,30 @@ async def update_agent_game_state(game: Game, agent: Any) -> None:
         # Have the agent choose an action (forward, turn left, turn right)
         action = agent.get_action(old_state)
         
-        # Convert the agent's action to a game direction
+        # Convert the agent's relative action to absolute game direction
         # Actions: [1,0,0] = straight, [0,1,0] = turn right, [0,0,1] = turn left
-        if action == [0, 1, 0]:  # Turn right
-            game.queue_change("RIGHT")
-        elif action == [0, 0, 1]:  # Turn left
-            game.queue_change("LEFT")
+        current_direction = game.snake.direction
+        
+        if action == [0, 1, 0]:  # Turn right (relative to current direction)
+            if current_direction == (0, -1):  # Currently moving up
+                game.queue_change("RIGHT")  # Turn right -> move right
+            elif current_direction == (0, 1):  # Currently moving down
+                game.queue_change("LEFT")   # Turn right -> move left
+            elif current_direction == (-1, 0):  # Currently moving left
+                game.queue_change("UP")     # Turn right -> move up
+            elif current_direction == (1, 0):  # Currently moving right
+                game.queue_change("DOWN")   # Turn right -> move down
+                
+        elif action == [0, 0, 1]:  # Turn left (relative to current direction)
+            if current_direction == (0, -1):  # Currently moving up
+                game.queue_change("LEFT")   # Turn left -> move left
+            elif current_direction == (0, 1):  # Currently moving down
+                game.queue_change("RIGHT")  # Turn left -> move right
+            elif current_direction == (-1, 0):  # Currently moving left
+                game.queue_change("DOWN")   # Turn left -> move down
+            elif current_direction == (1, 0):  # Currently moving right
+                game.queue_change("UP")     # Turn left -> move up
+        
         # For [1,0,0] (straight), we don't need to change direction
         
         # Step the game forward one frame
